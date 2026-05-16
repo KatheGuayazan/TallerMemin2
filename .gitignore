@@ -83,14 +83,13 @@ Assets/StreamingAssets/google-services-desktop.json.meta
 Assets/Plugins/Android/FirebaseApp.androidlib/
 Assets/GeneratedLocalRepo/
 Assets/GeneratedLocalRepo.meta
-Assets/Editor Default Resources/Firebase
-Assets/Firebase/Editor
-Assets/Firebase/FirebaseApp
-Assets/Firebase/m2repository
-Assets/Firebase/Plugins
+Assets/Editor_Default_Resources
+Assets/Editor_Default_Resources/Firebase
+
 
 # Firebase cache
 .firebase/
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
+Assets/Firebase/Plugins/x86_64/
