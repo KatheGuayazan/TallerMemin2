@@ -74,13 +74,23 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-|# Firebase
-google-services.json
+# Firebase
 GoogleService-Info.plist
+Assets/google-services.json
+Assets/google-services.json.meta
+Assets/StreamingAssets/google-services-desktop.json
+Assets/StreamingAssets/google-services-desktop.json.meta
+Assets/Plugins/Android/FirebaseApp.androidlib/
+Assets/GeneratedLocalRepo/
+Assets/GeneratedLocalRepo.meta
+Assets/Editor Default Resources/Firebase
+Assets/Firebase/Editor
+Assets/Firebase/FirebaseApp
+Assets/Firebase/m2repository
+Assets/Firebase/Plugins
 
-Firebase cache
+# Firebase cache
 .firebase/
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
-Assets/Firebase/Plugins/x86_64/
