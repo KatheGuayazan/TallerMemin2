@@ -1,54 +1,66 @@
 ﻿using Firebase.Firestore;
-using Firebase.Extensions;
-
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
 public class Firestore : MonoBehaviour
 {
-    FirebaseFirestore db;
+    #region VARIABLES
+
+    private FirebaseFirestore db;
+
+    #endregion
+
+    #region UNITY METHODS
 
     private void Awake()
     {
         db = FirebaseFirestore.DefaultInstance;
     }
 
+    #endregion
+
     #region CREATE SECTION
 
-    /// <summary>
-    /// Crear una nueva sección con ID automático
-    /// </summary>
-    public async Task<string> CreateSection(string nombre)
+    public async Task<string> CreateSection(string nombreJugador)
     {
-        DocumentReference docRef = db.Collection("Sections").Document();
+        DocumentReference docRef =
+            db.Collection("Sections").Document();
 
-        Dictionary<string, object> data = new Dictionary<string, object>()
+        Dictionary<string, object> estadistica =
+            new Dictionary<string, object>()
         {
-            { "Nombre", nombre },
+            { "ArduinosRecolectados", 0 },
+            { "ArduinosPerdidos", 0 },
+            { "ToxicosEsquivados", 0 },
 
-            { "Comportamiento", new Dictionary<string, object>()
+            { "HoraInicio", Timestamp.GetCurrentTimestamp() },
+            { "HoraFinal", Timestamp.GetCurrentTimestamp() },
+
+            { "Historico", new List<object>() }
+        };
+
+        Dictionary<string, object> data =
+            new Dictionary<string, object>()
+        {
+            { "Nombre", nombreJugador },
+
+            {
+                "Comportamiento",
+                new Dictionary<string, object>()
                 {
                     { "NumeroSecciones", 0 },
-                    { "TiempoInstrucciones", 0 }
+                    { "TiempoInstrucciones", 0f }
                 }
             },
 
-            { "Estadistica", new Dictionary<string, object>()
-                {
-                    { "AlimentosRecolectados", 0 },
-                    { "HoraInicio", Timestamp.GetCurrentTimestamp() },
-                    { "HoraFinal", Timestamp.GetCurrentTimestamp() },
-                    { "ToxicosEsquivados", 0 }
-                }
-            }
+            { "Estadistica", estadistica }
         };
 
         await docRef.SetAsync(data);
 
-        Debug.Log("Section creada");
-        Debug.Log("ID: " + docRef.Id);
+        Debug.Log("Nueva sesión creada");
+        Debug.Log("ID Documento: " + docRef.Id);
 
         return docRef.Id;
     }
@@ -57,12 +69,18 @@ public class Firestore : MonoBehaviour
 
     #region UPDATE NOMBRE
 
-    public async Task UpdateNombre(string documentID, string nuevoNombre)
+    public async Task UpdateNombre(
+        string documentID,
+        string nuevoNombre)
     {
         DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
+            db.Collection("Sections")
+            .Document(documentID);
 
-        await docRef.UpdateAsync("Nombre", nuevoNombre);
+        await docRef.UpdateAsync(
+            "Nombre",
+            nuevoNombre
+        );
 
         Debug.Log("Nombre actualizado");
     }
@@ -71,10 +89,13 @@ public class Firestore : MonoBehaviour
 
     #region UPDATE COMPORTAMIENTO
 
-    public async Task UpdateNumeroSecciones(string documentID, int value)
+    public async Task UpdateNumeroSecciones(
+        string documentID,
+        int value)
     {
         DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
+            db.Collection("Sections")
+            .Document(documentID);
 
         await docRef.UpdateAsync(
             "Comportamiento.NumeroSecciones",
@@ -84,10 +105,13 @@ public class Firestore : MonoBehaviour
         Debug.Log("NumeroSecciones actualizado");
     }
 
-    public async Task UpdateTiempoInstrucciones(string documentID, float tiempo)
+    public async Task UpdateTiempoInstrucciones(
+        string documentID,
+        float tiempo)
     {
         DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
+            db.Collection("Sections")
+            .Document(documentID);
 
         await docRef.UpdateAsync(
             "Comportamiento.TiempoInstrucciones",
@@ -99,66 +123,53 @@ public class Firestore : MonoBehaviour
 
     #endregion
 
-    #region UPDATE ESTADISTICAS
+    #region APPEND STATISTICS ENTRY
 
-    public async Task UpdateAlimentos(
+
+    public async Task AppendStatisticsEntry(
         string documentID,
-        int cantidad)
+        int recolectados,
+        int perdidos,
+        int toxicosEsquivados,
+        Timestamp horaInicio,
+        Timestamp horaFinal)
     {
         DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
+            db.Collection("Sections")
+            .Document(documentID);
 
-        await docRef.UpdateAsync(
-            "Estadistica.ArduinosRecolectados",
-            cantidad
+        Dictionary<string, object> entry =
+            new Dictionary<string, object>()
+        {
+            { "ArduinosRecolectados", recolectados },
+            { "ArduinosPerdidos", perdidos },
+            { "ToxicosEsquivados", toxicosEsquivados },
+
+            { "HoraInicio", horaInicio },
+            { "HoraFinal", horaFinal }
+        };
+
+        // Usar SetAsync con merge para crear el documento si no existe
+        await docRef.SetAsync(
+            new Dictionary<string, object>()
+            {
+                { "Estadistica", FieldValue.ArrayUnion(entry) }
+            },
+            SetOptions.MergeAll
         );
+
+        Debug.Log("Nueva estadística añadida");
     }
-
-    public async Task UpdateToxicos(
-        string documentID,
-        int cantidad)
-    {
-        DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
-
-        await docRef.UpdateAsync(
-            "Estadistica.ToxicosEsquivados",
-            cantidad
-        );
-    }
-
-    public async Task UpdateHoraInicio(
-        string documentID)
-    {
-        DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
-
-        await docRef.UpdateAsync(
-            "Estadistica.HoraInicio",
-            Timestamp.GetCurrentTimestamp()
-        );
-    }
-
-    public async Task UpdateHoraFinal(
-        string documentID)
-    {
-        DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
-
-        await docRef.UpdateAsync(
-            "Estadistica.HoraFinal",
-            Timestamp.GetCurrentTimestamp()
-        );
-    }
-
     #endregion
+
 
     #region READ SECTION
 
     public async Task ReadSection(string documentID)
     {
         DocumentReference docRef =
-            db.Collection("Sections").Document(documentID);
+            db.Collection("Sections")
+            .Document(documentID);
 
         DocumentSnapshot snapshot =
             await docRef.GetSnapshotAsync();
@@ -169,8 +180,11 @@ public class Firestore : MonoBehaviour
                 snapshot.ToDictionary();
 
             Debug.Log("Documento encontrado");
-
             Debug.Log("Nombre: " + data["Nombre"]);
+        }
+        else
+        {
+            Debug.Log("Documento no existe");
         }
     }
 

@@ -13,7 +13,19 @@ public class PlayerMovement2D : MonoBehaviour
 
     private PlayerInputHandler inputHandler;
 
-   void Start()
+    private bool isMoving = true;
+
+    private void OnEnable()
+    {
+        ScoreEvents.FinishGame += StopMovement;
+    }
+
+    private void OnDisable()
+    {
+        ScoreEvents.FinishGame -= StopMovement;
+    }
+
+    void Start()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
     }
@@ -26,6 +38,8 @@ public class PlayerMovement2D : MonoBehaviour
     // ------------------ Handles horizontal movement ------------------
     private void Move()
     {
+        if (!isMoving) return;
+
         Vector3 position = transform.position;
 
         position.x += inputHandler.MoveInput * moveSpeed * Time.deltaTime;
@@ -33,6 +47,11 @@ public class PlayerMovement2D : MonoBehaviour
         position.x = Mathf.Clamp(position.x, minX, maxX);
 
         transform.position = position;
+    }
+
+    private void StopMovement()
+    {
+        isMoving = false;
     }
 
     // ------------------ Draw movement limits ------------------

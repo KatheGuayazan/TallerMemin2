@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3bd40714d97d4544afbdd191dd586ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement2D
-  moveSpeed: 6
+  moveSpeed: 8
   minX: -9.72
   maxX: 9.72
 --- !u!114 &54584423010914914

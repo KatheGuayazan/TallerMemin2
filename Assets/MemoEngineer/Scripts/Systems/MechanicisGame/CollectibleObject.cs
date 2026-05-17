@@ -22,6 +22,7 @@ public class CollectibleObject : MonoBehaviour, IPlayerCollision, IPoolable
 
         if (other.CompareTag("Ground"))
         {
+            ScoreEvents.OnBadCollected?.Invoke();
             pool.Return(gameObject);
         }
     }
@@ -29,6 +30,7 @@ public class CollectibleObject : MonoBehaviour, IPlayerCollision, IPoolable
     // ------------------ Collectible logic ------------------
     public void OnPlayerCollision()
     {
-        Debug.Log("El jugador recogió un COLLECTIBLE");
+
+        ScoreEvents.OnGoodCollected?.Invoke();
     }
 }

@@ -32,7 +32,6 @@ namespace Firebase.Internal
     private static Type _appCheckType;
     private static MethodInfo _appCheckGetInstanceMethod;
     private static MethodInfo _appCheckGetTokenMethod;
-    private static MethodInfo _appCheckGetLimitedUseTokenMethod;
     private static PropertyInfo _appCheckTokenResultProperty;
     private static PropertyInfo _appCheckTokenTokenProperty;
     // Used to determine if the App Check reflection initialized successfully, and should work.
@@ -154,7 +153,6 @@ namespace Firebase.Internal
     {
       const string firebaseAppCheckTypeName = "Firebase.AppCheck.FirebaseAppCheck, Firebase.AppCheck";
       const string getAppCheckTokenMethodName = "GetAppCheckTokenAsync";
-      const string getLimitedUseAppCheckTokenMethodName = "GetLimitedUseAppCheckTokenAsync";
 
       try
       {
@@ -184,16 +182,6 @@ namespace Firebase.Internal
         if (_appCheckGetTokenMethod == null)
         {
           LogError($"Could not find {getAppCheckTokenMethodName} method via reflection.");
-          return;
-        }
-
-        // Get the instance method GetLimitedUseAppCheckTokenAsync()
-        _appCheckGetLimitedUseTokenMethod = _appCheckType.GetMethod(
-            getLimitedUseAppCheckTokenMethodName, BindingFlags.Instance | BindingFlags.Public, null,
-            Type.EmptyTypes, null);
-        if (_appCheckGetLimitedUseTokenMethod == null)
-        {
-          LogError($"Could not find {getLimitedUseAppCheckTokenMethodName} method via reflection.");
           return;
         }
 
@@ -227,7 +215,7 @@ namespace Firebase.Internal
     }
 
     // Gets the AppCheck Token, assuming there is one. Otherwise, returns null.
-    internal static async Task<string> GetAppCheckTokenAsync(FirebaseApp firebaseApp, bool limitedUse = false)
+    internal static async Task<string> GetAppCheckTokenAsync(FirebaseApp firebaseApp)
     {
       // If AppCheck reflection failed for any reason, nothing to do.
       if (!_appCheckReflectionInitialized)
@@ -245,17 +233,8 @@ namespace Firebase.Internal
           return null;
         }
 
-        object taskObject;
-        if (limitedUse)
-        {
-          taskObject = _appCheckGetLimitedUseTokenMethod.Invoke(appCheckInstance, null);
-        }
-        else
-        {
-          // Invoke GetAppCheckTokenAsync(false) - returns a Task<AppCheckToken>
-          taskObject = _appCheckGetTokenMethod.Invoke(appCheckInstance, new object[] { false });
-        }
-        
+        // Invoke GetAppCheckTokenAsync(false) - returns a Task<AppCheckToken>
+        object taskObject = _appCheckGetTokenMethod.Invoke(appCheckInstance, new object[] { false });
         if (taskObject is not Task appCheckTokenTask)
         {
           LogError($"Invoking GetToken did not return a Task.");
@@ -281,8 +260,7 @@ namespace Firebase.Internal
         }
 
         // Get the Token property from the AppCheckToken struct
-        string finalToken = _appCheckTokenTokenProperty.GetValue(tokenResult) as string;
-        return finalToken;
+        return _appCheckTokenTokenProperty.GetValue(tokenResult) as string;
       }
       catch (Exception e)
       {
@@ -426,9 +404,9 @@ namespace Firebase.Internal
     }
 
     // Adds the other Firebase tokens to the HttpRequest, as available.
-    internal static async Task AddFirebaseTokensAsync(HttpRequestMessage request, FirebaseApp firebaseApp, string authTokenPrefix = "Firebase", bool limitedUseAppCheckTokens = false)
+    internal static async Task AddFirebaseTokensAsync(HttpRequestMessage request, FirebaseApp firebaseApp, string authTokenPrefix = "Firebase")
     {
-      string appCheckToken = await GetAppCheckTokenAsync(firebaseApp, limitedUseAppCheckTokens);
+      string appCheckToken = await GetAppCheckTokenAsync(firebaseApp);
       if (!string.IsNullOrEmpty(appCheckToken))
       {
         request.Headers.Add(appCheckHeader, appCheckToken);

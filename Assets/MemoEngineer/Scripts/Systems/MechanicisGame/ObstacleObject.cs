@@ -22,6 +22,8 @@ public class ObstacleObject : MonoBehaviour, IPlayerCollision, IPoolable
 
         if (other.CompareTag("Ground"))
         {
+
+            ScoreEvents.OnToxicDodged?.Invoke();
             pool.Return(gameObject);
         }
     }
@@ -29,6 +31,7 @@ public class ObstacleObject : MonoBehaviour, IPlayerCollision, IPoolable
     // ------------------ Obstacle logic ------------------
     public void OnPlayerCollision()
     {
-        Debug.Log("El jugador chocó con un OBSTÁCULO");
+        
+        ScoreEvents.FinishGame?.Invoke();
     }
 }
