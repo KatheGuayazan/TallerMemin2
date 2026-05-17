@@ -13,7 +13,7 @@ public class FallingObjectSpawner : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] private float spawnInterval = 1f;
 
-    [Tooltip("Probabilidad de que salga un obst·culo")]
+    [Tooltip("Probabilidad de que salga un obst√°culo")]
     [Range(0f, 1f)]
     [SerializeField] private float obstacleChance = 0.2f;
 
@@ -42,7 +42,6 @@ public class FallingObjectSpawner : MonoBehaviour
         ScoreEvents.FinishGame -= FinishGame;
     }
 
-    // ------------------ Initializes pools ------------------
     private void Start()
     {
         obstaclePool = new ObjectPool(
@@ -58,7 +57,6 @@ public class FallingObjectSpawner : MonoBehaviour
         );
     }
 
-    // ------------------ Handles timed spawning ------------------
     private void Update()
     {
         if (!isSpawning)
@@ -73,15 +71,12 @@ public class FallingObjectSpawner : MonoBehaviour
         }
     }
 
-    // ------------------ Spawns obstacle or collectible ------------------
     private void SpawnObject()
     {
         float randomX = Random.Range(minX, maxX);
 
         Vector3 spawnPosition = new Vector3(randomX, spawnY, 0f);
 
-        // TRUE = obstacle
-        // FALSE = collectible
         bool spawnObstacle = Random.value <= obstacleChance;
 
         GameObject obj;
@@ -99,13 +94,11 @@ public class FallingObjectSpawner : MonoBehaviour
         obj.SetActive(true);
     }
 
-    // ------------------ Stops spawning ------------------
     private void FinishGame()
     {
         isSpawning = false;
     }
 
-    // ------------------ Draws spawn range in Scene view ------------------
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
