@@ -49,8 +49,7 @@ public class Firestore : MonoBehaviour
                 "Comportamiento",
                 new Dictionary<string, object>()
                 {
-                    { "NumeroSecciones", 0 },
-                    { "TiempoInstrucciones", 0f }
+                    { "TiempoInstruccionesSeg", 0f }
                 }
             },
 
@@ -89,22 +88,6 @@ public class Firestore : MonoBehaviour
 
     #region UPDATE COMPORTAMIENTO
 
-    public async Task UpdateNumeroSecciones(
-        string documentID,
-        int value)
-    {
-        DocumentReference docRef =
-            db.Collection("Sections")
-            .Document(documentID);
-
-        await docRef.UpdateAsync(
-            "Comportamiento.NumeroSecciones",
-            value
-        );
-
-        Debug.Log("NumeroSecciones actualizado");
-    }
-
     public async Task UpdateTiempoInstrucciones(
         string documentID,
         float tiempo)
@@ -114,7 +97,7 @@ public class Firestore : MonoBehaviour
             .Document(documentID);
 
         await docRef.UpdateAsync(
-            "Comportamiento.TiempoInstrucciones",
+            "Comportamiento.TiempoInstruccionesSeg",
             tiempo
         );
 

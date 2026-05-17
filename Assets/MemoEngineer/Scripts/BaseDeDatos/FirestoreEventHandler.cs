@@ -5,9 +5,20 @@ public class FirestoreEventHandler : MonoBehaviour
 {
     #region REFERENCES
 
+    [Header("Firestore Reference")]
     [SerializeField] private Firestore firestore;
 
-    [SerializeField] private string documentIdPrefix = "IDPartida";
+    #endregion
+
+    #region DOCUMENT SETTINGS
+
+    [Header("Document Settings")]
+
+    [SerializeField]
+    private bool useGeneratedDocumentId = true;
+
+    [SerializeField]
+    private string manualDocumentId = "IDPartida";
 
     #endregion
 
@@ -15,18 +26,35 @@ public class FirestoreEventHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        FirestoreEvents.OnSaveStatistics += OnSaveStatistics;
+        FirestoreEvents.OnSaveStatistics +=
+            OnSaveStatistics;
+
+        FirestoreEvents.OnUpdateInstructionTime +=
+            OnUpdateInstructionTime;
     }
 
     private void OnDisable()
     {
-        FirestoreEvents.OnSaveStatistics -= OnSaveStatistics;
+        FirestoreEvents.OnSaveStatistics -=
+            OnSaveStatistics;
+
+        FirestoreEvents.OnUpdateInstructionTime -=
+            OnUpdateInstructionTime;
     }
 
     #endregion
 
-    #region SESSION
+    #region DOCUMENT ID
 
+    private string GetDocumentId()
+    {
+        if (useGeneratedDocumentId)
+        {
+            return FirestoreSession.CurrentDocumentId;
+        }
+
+        return manualDocumentId;
+    }
 
     #endregion
 
@@ -41,8 +69,20 @@ public class FirestoreEventHandler : MonoBehaviour
     {
         if (firestore == null) return;
 
+        string documentId =
+            GetDocumentId();
+
+        if (string.IsNullOrEmpty(documentId))
+        {
+            Debug.LogWarning(
+                "Document ID is null or empty"
+            );
+
+            return;
+        }
+
         await firestore.AppendStatisticsEntry(
-            documentIdPrefix,
+            documentId,
             recolectados,
             perdidos,
             esquivados,
@@ -51,6 +91,37 @@ public class FirestoreEventHandler : MonoBehaviour
         );
 
         Debug.Log("Statistics Saved");
+    }
+
+    #endregion
+
+    #region UPDATE INSTRUCTION TIME
+
+    private async void OnUpdateInstructionTime(
+        float time)
+    {
+        if (firestore == null) return;
+
+        string documentId =
+            GetDocumentId();
+
+        if (string.IsNullOrEmpty(documentId))
+        {
+            Debug.LogWarning(
+                "Document ID is null or empty"
+            );
+
+            return;
+        }
+
+        await firestore.UpdateTiempoInstrucciones(
+            documentId,
+            time
+        );
+
+        Debug.Log(
+            "Instruction Time Updated"
+        );
     }
 
     #endregion

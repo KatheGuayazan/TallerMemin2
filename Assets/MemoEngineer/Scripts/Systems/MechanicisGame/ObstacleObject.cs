@@ -4,6 +4,18 @@ public class ObstacleObject : MonoBehaviour, IPlayerCollision, IPoolable
 {
     private ObjectPool pool;
 
+    private void OnEnable()
+    {
+        ScoreEvents.FinishGame += OnReturnToPool;
+    }
+
+    private void OnDisable()
+    {
+        ScoreEvents.FinishGame -= OnReturnToPool;
+    }
+
+   
+
     // ------------------ Receives pool reference ------------------
     public void SetPool(ObjectPool pool)
     {
@@ -26,6 +38,12 @@ public class ObstacleObject : MonoBehaviour, IPlayerCollision, IPoolable
             ScoreEvents.OnToxicDodged?.Invoke();
             pool.Return(gameObject);
         }
+    }
+
+    public void OnReturnToPool()
+    {
+
+        pool.Return(gameObject);
     }
 
     // ------------------ Obstacle logic ------------------

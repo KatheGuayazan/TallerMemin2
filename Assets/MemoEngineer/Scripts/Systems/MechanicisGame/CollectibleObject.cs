@@ -4,6 +4,17 @@ public class CollectibleObject : MonoBehaviour, IPlayerCollision, IPoolable
 {
     private ObjectPool pool;
 
+    private void OnEnable()
+    {
+        ScoreEvents.FinishGame += OnReturnToPool;
+    }
+
+    private void OnDisable()
+    {
+        ScoreEvents.FinishGame -= OnReturnToPool;
+    }
+
+
     // ------------------ Receives pool reference ------------------
     public void SetPool(ObjectPool pool)
     {
@@ -25,6 +36,12 @@ public class CollectibleObject : MonoBehaviour, IPlayerCollision, IPoolable
             ScoreEvents.OnBadCollected?.Invoke();
             pool.Return(gameObject);
         }
+    }
+
+    public void OnReturnToPool()
+    {
+
+        pool.Return(gameObject);
     }
 
     // ------------------ Collectible logic ------------------
