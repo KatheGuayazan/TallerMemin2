@@ -7,7 +7,6 @@ public class ObjectPool
     private readonly GameObject prefab;
     private readonly Transform container;
 
-    // ------------------ Initializes the pool with a predefined number of inactive objects ------------------
     public ObjectPool(GameObject prefab, int initialSize, Transform container)
     {
         this.prefab = prefab;
@@ -21,7 +20,6 @@ public class ObjectPool
         }
     }
 
-    // ------------------ Retrieves an object from the pool or creates a new one if needed ------------------
     public GameObject Get()
     {
         GameObject obj;
@@ -46,7 +44,6 @@ public class ObjectPool
         return obj;
     }
 
-    // ------------------ Returns an object back to the pool and disables it ------------------
     public void Return(GameObject obj)
     {
         obj.SetActive(false);
