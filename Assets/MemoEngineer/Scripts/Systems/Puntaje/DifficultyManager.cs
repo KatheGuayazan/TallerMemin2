@@ -8,13 +8,13 @@ public class DifficultyManager : MonoBehaviour
     [Header("Frecuencia (spawnInterval)")]
     [SerializeField] private float initialSpawnInterval = 1f;
     [SerializeField] private float minSpawnInterval = 0.3f;
-    [SerializeField] private float spawnIntervalDecreasePerScore = 0.02f; // cu·nto se reduce el intervalo por punto
+    [SerializeField] private float spawnIntervalDecreasePerScore = 0.02f;
 
-    [Header("Probabilidad obst·culo (obstacleChance)")]
+    [Header("Probabilidad obst√°culo (obstacleChance)")]
     [Range(0f, 1f)]
     [SerializeField] private float obstacleChanceBase = 0.2f;
     [SerializeField] private float obstacleChanceMax = 0.6f;
-    [SerializeField] private float obstacleChanceIncreasePerScore = 0.005f; // aumenta mucho m·s lento
+    [SerializeField] private float obstacleChanceIncreasePerScore = 0.005f;
 
     private void OnEnable()
     {
