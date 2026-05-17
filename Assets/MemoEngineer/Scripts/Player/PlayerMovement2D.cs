@@ -35,7 +35,6 @@ public class PlayerMovement2D : MonoBehaviour
         Move();
     }
 
-    // ------------------ Handles horizontal movement ------------------
     private void Move()
     {
         if (!isMoving) return;
@@ -54,7 +53,6 @@ public class PlayerMovement2D : MonoBehaviour
         isMoving = false;
     }
 
-    // ------------------ Draw movement limits ------------------
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
