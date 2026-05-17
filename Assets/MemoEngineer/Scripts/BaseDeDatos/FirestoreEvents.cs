@@ -1,5 +1,6 @@
-using System;
 using Firebase.Firestore;
+using System;
+using System.Collections.Generic;
 
 public static class FirestoreEvents
 {
@@ -13,6 +14,13 @@ public static class FirestoreEvents
     #region UPDATE EVENTS
 
     public static Action<float> OnUpdateInstructionTime;
+
+    #endregion
+
+    #region READ EVENTS
+
+    public static Action<List<PlayerScoreData>>
+        OnScoresLoaded;
 
     #endregion
 }

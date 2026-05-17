@@ -317,7 +317,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78405b9af2cd194c8e46cb320d0cd27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreToFirestoreEvents
-  invokeStartOnAwake: 1
 --- !u!114 &164594316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,7 +342,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirestoreEventHandler
   firestore: {fileID: 164594316}
-  documentId: IDPartida
+  useGeneratedDocumentId: 1
+  manualDocumentId: IDPartida
 --- !u!1 &176760896
 GameObject:
   m_ObjectHideFlags: 0

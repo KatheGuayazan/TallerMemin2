@@ -1,4 +1,5 @@
 using Firebase.Firestore;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FirestoreEventHandler : MonoBehaviour
@@ -122,6 +123,22 @@ public class FirestoreEventHandler : MonoBehaviour
         Debug.Log(
             "Instruction Time Updated"
         );
+    }
+
+    #endregion
+
+    #region LOAD SCORES
+
+    public async void LoadScores()
+    {
+        if (firestore == null) return;
+
+        List<PlayerScoreData> scores =
+            await firestore.GetAllScores();
+
+        FirestoreEvents.OnScoresLoaded?.Invoke(scores);
+
+        Debug.Log("Scores Loaded");
     }
 
     #endregion

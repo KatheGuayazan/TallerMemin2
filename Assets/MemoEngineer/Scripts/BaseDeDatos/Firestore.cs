@@ -145,31 +145,101 @@ public class Firestore : MonoBehaviour
     }
     #endregion
 
+    #region READ ALL SCORES
 
-    #region READ SECTION
-
-    public async Task ReadSection(string documentID)
+    public async Task<List<PlayerScoreData>> GetAllScores()
     {
-        DocumentReference docRef =
-            db.Collection("Sections")
-            .Document(documentID);
+        QuerySnapshot snapshot =
+            await db.Collection("Sections")
+            .GetSnapshotAsync();
 
-        DocumentSnapshot snapshot =
-            await docRef.GetSnapshotAsync();
+        List<PlayerScoreData> scores =
+            new List<PlayerScoreData>();
 
-        if (snapshot.Exists)
+        foreach (DocumentSnapshot document in snapshot.Documents)
         {
             Dictionary<string, object> data =
-                snapshot.ToDictionary();
+                document.ToDictionary();
 
-            Debug.Log("Documento encontrado");
-            Debug.Log("Nombre: " + data["Nombre"]);
+            string playerName = "Unknown";
+
+            if (data.ContainsKey("Nombre"))
+            {
+                playerName = data["Nombre"].ToString();
+            }
+
+            int totalScore = 0;
+
+            // =========================
+            // ESTADISTICA ARRAY
+            // =========================
+
+            if (data.ContainsKey("Estadistica"))
+            {
+                List<object> estadisticas =
+                    data["Estadistica"] as List<object>;
+
+                if (estadisticas != null)
+                {
+                    foreach (object item in estadisticas)
+                    {
+                        Dictionary<string, object> stats =
+                            item as Dictionary<string, object>;
+
+                        if (stats == null) continue;
+
+                        int recolectados = 0;
+                        int perdidos = 0;
+                        int esquivados = 0;
+
+                        if (stats.ContainsKey("ArduinosRecolectados"))
+                        {
+                            recolectados =
+                                System.Convert.ToInt32(
+                                    stats["ArduinosRecolectados"]);
+                        }
+
+                        if (stats.ContainsKey("ArduinosPerdidos"))
+                        {
+                            perdidos =
+                                System.Convert.ToInt32(
+                                    stats["ArduinosPerdidos"]);
+                        }
+
+                        if (stats.ContainsKey("ToxicosEsquivados"))
+                        {
+                            esquivados =
+                                System.Convert.ToInt32(
+                                    stats["ToxicosEsquivados"]);
+                        }
+
+                        totalScore +=
+                            recolectados +
+                            esquivados -
+                            perdidos;
+                    }
+                }
+            }
+
+            PlayerScoreData scoreData =
+                new PlayerScoreData()
+                {
+                    playerName = playerName,
+                    score = totalScore
+                };
+
+            scores.Add(scoreData);
         }
-        else
-        {
-            Debug.Log("Documento no existe");
-        }
+
+        // =========================
+        // ORDER DESCENDING
+        // =========================
+
+        scores.Sort((a, b) => b.score.CompareTo(a.score));
+
+        return scores;
     }
 
     #endregion
+
 }
