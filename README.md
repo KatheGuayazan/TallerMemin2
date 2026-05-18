@@ -7,7 +7,7 @@
 **Duración estimada de sesión:** 2-5 minutos  
 **Plataforma:** Unity (PC/Editor)  
 **Backend:** Firebase Firestore  
-**Dashboard:** Aplicación web (Vue.js/React - a desarrollar)
+**Dashboard:** https://github.com/KatheGuayazan/PagWebTallerMemo
 
 ---
 
@@ -180,131 +180,20 @@ highscores/
   - Enviar notificaciones
   - Limpiar datos expirados
 
-#### **Dashboard Web (A Desarrollar)**
+#### **Dashboard Web**
 
-- Vue.js/React con Firebase Realtime Connection
-- Consultas a Firestore en tiempo real
-- Visualización de datos con Chart.js o similar
+- La parte del dashboard/lectura se trabaja en: https://github.com/KatheGuayazan/PagWebTallerMemo
+- Este repositorio se enfoca en el juego y la escritura de datos hacia Firebase.
 
 ---
 
-## 🎯 Especificaciones del Dashboard Web
+## 🎯 Dashboard Web
 
-### Requisitos Mínimos
+La parte de lectura y visualización del dashboard se realiza en este repositorio:
 
-El dashboard debe ser una **interfaz web completamente separada del juego** que se conecte a Firestore mediante API REST o SDK de Firebase para web.
+https://github.com/KatheGuayazan/PagWebTallerMemo
 
-#### **1. Tabla de Ranking (Highscores)**
-
-```
-┌─────────┬──────────┬──────────┐
-│ Posición│  Nombre  │  Puntaje │
-├─────────┼──────────┼──────────┤
-│    1    │   Juan   │   320    │
-│    2    │  María   │   280    │
-│    3    │  Carlos  │   210    │
-│   ...   │   ...    │   ...    │
-└─────────┴──────────┴──────────┘
-```
-
-**Características:**
-- Listado de top 10-20 jugadores ordenados por puntaje descendente
-- Actualización automática cada 10 segundos
-- Mostrar fecha de última actualización
-- Opción de exportar a CSV
-
-#### **2. Gráfica de Distribución de Puntajes**
-
-```
-Cantidad de Jugadores
-          │
-        8 │     ██
-        7 │    ███
-        6 │    ███
-        5 │   █████
-        4 │   █████
-        3 │  ███████
-        2 │ █████████
-        1 │ █████████
-        0 └─────────────────────────
-          0-50  50-100  100-150  150+
-                    Rango de Puntaje
-```
-
-**Características:**
-- Histograma de rango de puntajes
-- Mostrar distribución de habilidades
-- Indicador de promedio global
-- Filtro por fecha (últimas 24h, 7 días, todo)
-
-#### **3. Visualización 1: Precisión de Recoleccion vs Velocidad**
-
-```
-Scatter Plot: Todos los jugadores
-     Velocidad (aciertos/min)
-            │
-        15  │              ●
-        12  │          ●       ●
-         9  │      ●       ●
-         6  │  ●           ●
-         3  │
-         0  └─────────────────────
-            70%  80%  90%  100%
-          Precisión de Recolección
-```
-
-**Características:**
-- Cada punto = una sesión
-- X: Precisión (0-100%)
-- Y: Velocidad (aciertos/min)
-- Colores por rango de puntaje
-- Hover: mostrar nombre del jugador y puntaje
-
-#### **4. Visualización 2: Impacto de Instrucciones en Rendimiento**
-
-```
-Gráfica de Línea: Correlación Tiempo-Instrucciones vs Puntaje
-    Puntaje
-        │
-    300 │              ╱╲
-        │            ╱    ╲
-    200 │          ╱        ╲
-        │        ╱            ╲
-    100 │      ╱                ╲
-        │    ╱                    ╲
-      0 └────────────────────────────
-        0s  15s  30s  45s  60s  90s
-          Tiempo Instrucciones (seg)
-```
-
-**Características:**
-- Mostrar si hay correlación entre tiempo de lectura y rendimiento
-- Línea de tendencia
-- Detectar "punto dulce" de tiempo óptimo
-- Identificar jugadores que gastan demasiado tiempo
-
-#### **5. Panel de Estadísticas Globales**
-
-```
-┌────────────────────┬────────────────────┐
-│ Total de Sesiones  │   Puntaje Promedio │
-│       145          │       187.4        │
-├────────────────────┼────────────────────┤
-│ Jugadores Únicos   │  Mayor Puntaje     │
-│       23           │   520 (Juan)       │
-└────────────────────┴────────────────────┘
-```
-
-### Funcionalidades Adicionales
-
-- **Filtros:**
-  - Por fecha (hoy, últimos 7 días, mes, todo)
-  - Por rango de puntaje
-  - Por nombre del jugador (búsqueda)
-
-- **Actualizaciones:** Datos en tiempo real (WebSocket o polling cada 10 seg)
-
-- **Responsive:** Funciona en desktop, tablet y mobile
+En este README no se incluyen ejemplos de estadísticas del dashboard, ya que esa implementación está centralizada en ese proyecto.
 
 ---
 
@@ -399,10 +288,7 @@ FirestoreEvents.OnSaveStatistics?.Invoke(
   2. Pantalla de instrucciones (muestra timer)
   3. Gameplay (recolectar, esquivar, errores)
   4. Pantalla de resultados (puntaje y ranking)
-  5. Dashboard web mostrando:
-     - Ranking actualizado
-     - Gráficas de distribución
-     - Datos en tiempo real
+  5. Dashboard web (parte de lectura/visualización en: https://github.com/KatheGuayazan/PagWebTallerMemo)
 
 ### Documentación Entregada
 
@@ -416,7 +302,7 @@ FirestoreEvents.OnSaveStatistics?.Invoke(
 ## 🚀 Próximos Pasos
 
 1. **Verificar integración Firebase:** Confirmar que datos se guardan correctamente
-2. **Desarrollar Dashboard Web:** Crear interfaz con Vue.js o React
+2. **Dashboard Web:** Continuar la parte de lectura/visualización en https://github.com/KatheGuayazan/PagWebTallerMemo
 3. **Optimizar Cloud Functions:** Procesar datos al finalizar sesión
 4. **Testing:** Verificar recolección de datos en múltiples sesiones
 5. **Video de demostración:** Grabar funcionamiento completo del sistema
